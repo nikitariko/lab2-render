@@ -2,31 +2,27 @@ from flask import Flask, request, jsonify, abort
 
 app = Flask(__name__)
 
-# Простий "база даних" у вигляді словника
 items = {}
 next_id = 1
 
-# CREATE — додати новий елемент
+# CREATE
 @app.route('/items', methods=['POST'])
 def create_item():
     global next_id
     data = request.get_json()
     if not data or 'name' not in data:
         abort(400, "Missing 'name' in JSON")
-    item = {
-        'id': next_id,
-        'name': data['name']
-    }
+    item = {'id': next_id, 'name': data['name']}
     items[next_id] = item
     next_id += 1
     return jsonify(item), 201
 
-# READ — отримати всі елементи
+# READ all
 @app.route('/items', methods=['GET'])
 def get_items():
     return jsonify(list(items.values()))
 
-# READ — отримати один елемент за id
+# READ one
 @app.route('/items/<int:item_id>', methods=['GET'])
 def get_item(item_id):
     item = items.get(item_id)
@@ -34,7 +30,7 @@ def get_item(item_id):
         abort(404)
     return jsonify(item)
 
-# UPDATE — оновити елемент за id
+# UPDATE
 @app.route('/items/<int:item_id>', methods=['PUT'])
 def update_item(item_id):
     item = items.get(item_id)
@@ -46,7 +42,7 @@ def update_item(item_id):
     item['name'] = data['name']
     return jsonify(item)
 
-# DELETE — видалити елемент за id
+# DELETE
 @app.route('/items/<int:item_id>', methods=['DELETE'])
 def delete_item(item_id):
     item = items.pop(item_id, None)
