@@ -5,6 +5,10 @@ app = Flask(__name__)
 items = {}
 next_id = 1
 
+@app.route('/')
+def root():
+    return "API працює! Перейдіть на /items для роботи з даними."
+
 # CREATE
 @app.route('/items', methods=['POST'])
 def create_item():
